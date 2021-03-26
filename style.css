@@ -62,6 +62,7 @@ li.inner-list {
     grid-template-columns: 1fr 1fr;
     background-color: aquamarine;
     margin: 5px 0px;
+    height: 25px;
 }
 
 ul {

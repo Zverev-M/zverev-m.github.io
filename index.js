@@ -59,9 +59,9 @@ async function updateCurrentCity (el, url) {
         el.querySelector('h2').textContent = data.name;
         el.querySelector('span.current-city-temperature').textContent = Math.round(data.main.temp - 273) + "℃";
         el.querySelector('img.current-city-icon').src = "https://openweathermap.org/img/w/" + data.weather[0].icon + ".png";
-        el.querySelector('span.speed').textContent = data.wind.speed + " м/с";
+        el.querySelector('span.speed').textContent = data.wind.speed + " m/s";
         el.querySelector('span.description').textContent = data.weather[0].main;
-        el.querySelector('span.pressure').textContent = data.main.pressure + " мм. рт. ст.";
+        el.querySelector('span.pressure').textContent = data.main.pressure + " hpa";
         el.querySelector('span.humidity').textContent = data.main.humidity + "%";
         el.querySelector('span.coords').textContent = "[" + (Math.floor(data.coord.lat * 100)/ 100) + ", " + (Math.floor(data.coord.lon * 100) / 100) + "]";
     } else {
@@ -78,9 +78,9 @@ async function updateAdditionalCity (city, el) {
         el.querySelector('h3').textContent = data.name;
         el.querySelector('span.other-city-temperature').textContent = Math.round(data.main.temp - 273) + "℃";
         el.querySelector('img').src = "https://openweathermap.org/img/w/" + data.weather[0].icon + ".png";
-        el.querySelector('span.speed').textContent = data.wind.speed + " м/с";
+        el.querySelector('span.speed').textContent = data.wind.speed + " m/s";
         el.querySelector('span.description').textContent = data.weather[0].main;
-        el.querySelector('span.pressure').textContent = data.main.pressure + " мм. рт. ст.";
+        el.querySelector('span.pressure').textContent = data.main.pressure + " hpa";
         el.querySelector('span.humidity').textContent = data.main.humidity + "%";
         el.querySelector('span.coords').textContent = "[" + (Math.floor(data.coord.lat * 100)/ 100) + ", " + (Math.floor(data.coord.lon * 100) / 100) + "]";
 
@@ -126,7 +126,10 @@ function loadCityList () {
 }
 
 function loadPage () {
-    document.querySelector('#add').addEventListener('click', addCity);
+    document.querySelector('form.field-and-button').addEventListener('submit', (event) => {
+        event.preventDefault();
+        addCity();
+    });
     document.querySelector('button.update').addEventListener('click', updateByCoord);
     updateByCoord();
     loadCityList();
