@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./styleMobile.css">
+    <title>Lab1</title>
+</head>
+<body>
+    <main>
+        <script src="index.js"></script>
+        <div class="">
+            <div class="beginning">
+                <h1>Погода здесь</h1>
+                <button class="update"><span class="update-button-desktop">Обновить геолокацию</span><img src="update.png" alt="" class="update-button-mobile"></button>
+            </div>
+
+
+            <div class="current-city">
+                <h2 class="current-city-name">Обновление геолокации...</h2>
+
+                <ul class="current-weather-list">
+                    <li class="inner-list"><span class="point">Ветер</span> <span class="value speed">...</span></li>
+                    <li class="inner-list"><span class="point">Облачность</span> <span class="value description">...</span></li>
+                    <li class="inner-list"><span class="point">Давление</span> <span class="value pressure">...</span></li>
+                    <li class="inner-list"><span class="point">Влажность</span> <span class="value humidity">...</span></li>
+                    <li class="inner-list"><span class="point">Координаты</span> <span class="value coords">...</span></li>
+                </ul>
+
+                <img class="current-city-icon" src="" alt="" style="justify-self: center">
+                <span class="current-city-temperature" style="justify-self: center">...</span>
+            </div>
+
+            <div class="favorite">
+                <h2>Избранное</h2>
+
+                <form class="field-and-button" action="">
+                    <input placeholder="Добавить новый город" id="name">
+                    <button class="round" id="add">+</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="additional-cities">
+
+        </div>
+
+        <ul id="fvr">
+
+        </ul>
+
+    </main>
+</body>
+</html>
