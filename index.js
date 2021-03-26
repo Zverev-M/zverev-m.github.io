@@ -33,7 +33,7 @@ async function createNewFavoriteCity(city) {
         '                    <button class="round grid-element-right delete">X</button>\n' +
         '                    <ul class="other-city-list">\n' +
         '                        <li class="inner-list"><span class="point">Ветер</span> <span class="value speed">5.0 m/s</span></li>\n' +
-        '                        <li class="inner-list"><span class="point">Облачность</span> <span class="value description">Broken Clouds</span></li>\n' +
+        '                        <li class="inner-list"><span class="point">Осадки</span> <span class="value description">Broken Clouds</span></li>\n' +
         '                        <li class="inner-list"><span class="point">Давление</span> <span class="value pressure">1000 hpa</span></li>\n' +
         '                        <li class="inner-list"><span class="point">Влажность</span> <span class="value humidity">50%</span></li>\n' +
         '                        <li class="inner-list"><span class="point">Координаты</span> <span class="value coords">[0.00, 0.00]</span></li>\n' +
@@ -60,7 +60,7 @@ async function updateCurrentCity (el, url) {
         el.querySelector('span.current-city-temperature').textContent = Math.round(data.main.temp - 273) + "℃";
         el.querySelector('img.current-city-icon').src = "https://openweathermap.org/img/w/" + data.weather[0].icon + ".png";
         el.querySelector('span.speed').textContent = data.wind.speed + " м/с";
-        el.querySelector('span.description').textContent = data.weather[0].description;
+        el.querySelector('span.description').textContent = data.weather[0].main;
         el.querySelector('span.pressure').textContent = data.main.pressure + " мм. рт. ст.";
         el.querySelector('span.humidity').textContent = data.main.humidity + "%";
         el.querySelector('span.coords').textContent = "[" + (Math.floor(data.coord.lat * 100)/ 100) + ", " + (Math.floor(data.coord.lon * 100) / 100) + "]";
@@ -79,7 +79,7 @@ async function updateAdditionalCity (city, el) {
         el.querySelector('span.other-city-temperature').textContent = Math.round(data.main.temp - 273) + "℃";
         el.querySelector('img').src = "https://openweathermap.org/img/w/" + data.weather[0].icon + ".png";
         el.querySelector('span.speed').textContent = data.wind.speed + " м/с";
-        el.querySelector('span.description').textContent = data.weather[0].description;
+        el.querySelector('span.description').textContent = data.weather[0].main;
         el.querySelector('span.pressure').textContent = data.main.pressure + " мм. рт. ст.";
         el.querySelector('span.humidity').textContent = data.main.humidity + "%";
         el.querySelector('span.coords').textContent = "[" + (Math.floor(data.coord.lat * 100)/ 100) + ", " + (Math.floor(data.coord.lon * 100) / 100) + "]";
