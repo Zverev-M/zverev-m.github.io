@@ -58,7 +58,7 @@ async function updateCurrentCity (el, url) {
 
         el.querySelector('h2').textContent = data.name;
         el.querySelector('span.current-city-temperature').textContent = Math.round(data.main.temp - 273) + "℃";
-        el.querySelector('img.current-city-icon').src = "http://openweathermap.org/img/w/" + data.weather[0].icon + ".png";
+        el.querySelector('img.current-city-icon').src = "https://openweathermap.org/img/w/" + data.weather[0].icon + ".png";
         el.querySelector('span.speed').textContent = data.wind.speed + " м/с";
         el.querySelector('span.description').textContent = data.weather[0].description;
         el.querySelector('span.pressure').textContent = data.main.pressure + " мм. рт. ст.";
@@ -77,7 +77,7 @@ async function updateAdditionalCity (city, el) {
 
         el.querySelector('h3').textContent = data.name;
         el.querySelector('span.other-city-temperature').textContent = Math.round(data.main.temp - 273) + "℃";
-        el.querySelector('img').src = "http://openweathermap.org/img/w/" + data.weather[0].icon + ".png";
+        el.querySelector('img').src = "https://openweathermap.org/img/w/" + data.weather[0].icon + ".png";
         el.querySelector('span.speed').textContent = data.wind.speed + " м/с";
         el.querySelector('span.description').textContent = data.weather[0].description;
         el.querySelector('span.pressure').textContent = data.main.pressure + " мм. рт. ст.";
@@ -94,7 +94,7 @@ async function updateAdditionalCity (city, el) {
 }
 
 function getURLByName (city) {
-    return `http://api.openweathermap.org/data/2.5/weather?q=${city}&lang=ru&appid=94d4575428dc92002c2aca36ad6f2ca9`;
+    return `https://api.openweathermap.org/data/2.5/weather?q=${city}&lang=ru&appid=94d4575428dc92002c2aca36ad6f2ca9`;
 }
 
 function updateByCoord () {
@@ -109,7 +109,7 @@ function updateByCoord () {
         },
 
         function () {
-            updateCurrentCity(document.querySelector('div.current-city'),`http://api.openweathermap.org/data/2.5/weather?q=москва&lang=ru&appid=94d4575428dc92002c2aca36ad6f2ca9`);
+            updateCurrentCity(document.querySelector('div.current-city'),`https://api.openweathermap.org/data/2.5/weather?q=москва&lang=ru&appid=94d4575428dc92002c2aca36ad6f2ca9`);
         }
     );
 
