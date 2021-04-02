@@ -1,6 +1,14 @@
 async function addCity() {
     var el = document.querySelector('#name');
     var city = el.value;
+
+    if (!city) {
+        alert("Город не указан");
+        return;
+    }
+
+    let btn = document.querySelector('#add');
+    btn.disabled = true;
     el.value = '';
 
     var cityList = localStorage.getItem('cityList');
@@ -15,6 +23,8 @@ async function addCity() {
     if (result) {
         localStorage.setItem('cityList', JSON.stringify(cityList));
     }
+
+    btn.disabled = false;
 }
 
 function deleteCity(el, cityName) {
