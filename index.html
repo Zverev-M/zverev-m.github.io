@@ -47,9 +47,22 @@
         </div>
 
         <ul id="fvr">
-
+            <template class="other-city" id="example">
+                <li>
+                    <h3 class="grid-element-left other-city-name">...</h3>
+                    <span class="other-city-temperature grid-element-center">...</span>
+                    <img class="other-city-icon grid-element-center" src="weather.png">
+                    <button class="round grid-element-right delete">X</button>
+                    <ul class="other-city-list">
+                        <li class="inner-list"><span class="point">Ветер</span> <span class="value speed">...</span></li>
+                        <li class="inner-list"><span class="point">Осадки</span> <span class="value description">...</span></li>
+                        <li class="inner-list"><span class="point">Давление</span> <span class="value pressure">...</span></li>
+                        <li class="inner-list"><span class="point">Влажность</span> <span class="value humidity">...</span></li>
+                        <li class="inner-list"><span class="point">Координаты</span> <span class="value coords">...</span></li>
+                    </ul>
+                </li>
+            </template>
         </ul>
-
     </main>
 </body>
 </html>

@@ -3,6 +3,7 @@ button.round {
     height: 25px;
     border: solid 1px #000000;
     border-radius: 100%;
+    align-self: center;
 }
 
 button.update {
@@ -21,6 +22,7 @@ button.update {
 .other-city-icon {
     width: 50px;
     height: 50px;
+    align-self: center;
 }
 
 .other-city-name {
@@ -85,6 +87,7 @@ span.current-city-temperature {
 
 span.other-city-temperature {
     font-size: 24px;
+    align-self: center;
 }
 
 div.current-city {
@@ -115,7 +118,7 @@ div.weather-icons {
     align-self: center;
 }
 
-div.other-city {
+.other-city {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1fr;
     align-items: center;
@@ -181,4 +184,11 @@ span.update-button-desktop {
     display: grid;
     grid-template-columns: 1fr 1fr;
     list-style-type: none;
+    grid-column-gap: 10px;
+    grid-row-gap: 10px;
+    margin: 5px;
+}
+
+#example {
+    display: none;
 }

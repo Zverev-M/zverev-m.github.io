@@ -38,29 +38,13 @@ function deleteCity(el, cityName) {
 }
 
 async function createNewFavoriteCity(city, p) {
-    var el = document.createElement('li');
-    el.innerHTML = '<div class="other-city">\n' +
-        '                    <h3 class="grid-element-left other-city-name">...</h3>\n' +
-        '                    <span class="other-city-temperature grid-element-center">...</span>\n' +
-        '                    <img class="other-city-icon grid-element-center" src="weather.png">\n' +
-        '                    <button class="round grid-element-right delete">X</button>\n' +
-        '                    <ul class="other-city-list">\n' +
-        '                        <li class="inner-list"><span class="point">Ветер</span> <span class="value speed">...</span></li>\n' +
-        '                        <li class="inner-list"><span class="point">Осадки</span> <span class="value description">...</span></li>\n' +
-        '                        <li class="inner-list"><span class="point">Давление</span> <span class="value pressure">...</span></li>\n' +
-        '                        <li class="inner-list"><span class="point">Влажность</span> <span class="value humidity">...</span></li>\n' +
-        '                        <li class="inner-list"><span class="point">Координаты</span> <span class="value coords">...</span></li>\n' +
-        '                    </ul>\n' +
-        '                </div>'
-
-    if (p === 1) {
-        el.style.display = 'none';
-    }
-
-    document.querySelector('#fvr').appendChild(el);
+    var el = document.querySelector('#example').content.cloneNode(true);
+    document.querySelector('#fvr').append(el);
     el = document.querySelector('#fvr').lastElementChild;
 
-    var result = await updateAdditionalCity(city, el);
+    el.style.display = 'grid';
+
+    var result = await updateAdditionalCity(city, el, p);
 
     if (result) {
         el.style.display = 'grid';
@@ -71,26 +55,35 @@ async function createNewFavoriteCity(city, p) {
 }
 
 async function updateCurrentCity (el, url) {
-    var response = await fetch(url);
-    var data;
+    try {
+        var response = await fetch(url);
+        var data;
 
-    if (response.status === 200) {
-        data = await response.json();
+        if (response.status === 200) {
+            data = await response.json();
 
-        el.querySelector('h2').textContent = data.name;
-        el.querySelector('span.current-city-temperature').textContent = Math.round(data.main.temp - 273) + "℃";
-        el.querySelector('img.current-city-icon').src = "https://openweathermap.org/img/w/" + data.weather[0].icon + ".png";
-        el.querySelector('span.speed').textContent = data.wind.speed + " m/s";
-        el.querySelector('span.description').textContent = data.weather[0].main;
-        el.querySelector('span.pressure').textContent = data.main.pressure + " hpa";
-        el.querySelector('span.humidity').textContent = data.main.humidity + "%";
-        el.querySelector('span.coords').textContent = "[" + (Math.floor(data.coord.lat * 100)/ 100) + ", " + (Math.floor(data.coord.lon * 100) / 100) + "]";
-    } else {
-        alert('Ошибка загрузки');
+            el.querySelector('h2').textContent = data.name;
+            el.querySelector('span.current-city-temperature').textContent = Math.round(data.main.temp - 273) + "℃";
+            el.querySelector('img.current-city-icon').src = "https://openweathermap.org/img/w/" + data.weather[0].icon + ".png";
+            el.querySelector('span.speed').textContent = data.wind.speed + " m/s";
+            el.querySelector('span.description').textContent = data.weather[0].main;
+            el.querySelector('span.pressure').textContent = data.main.pressure + " hpa";
+            el.querySelector('span.humidity').textContent = data.main.humidity + "%";
+            el.querySelector('span.coords').textContent = "[" + (Math.floor(data.coord.lat * 100)/ 100) + ", " + (Math.floor(data.coord.lon * 100) / 100) + "]";
+
+            return true;
+        } else {
+            alert('Ошибка загрузки');
+            return false;
+        }
+    } catch (e) {
+        alert("Невозможно отправить запрос")
+        return false;
     }
+
 }
 
-async function updateAdditionalCity (city, el) {
+async function updateAdditionalCity (city, el, p) {
     try {
         var response = await fetch(getURLByName(city));
         var data;
@@ -115,6 +108,9 @@ async function updateAdditionalCity (city, el) {
         }
     } catch (e) {
         el.querySelector('h3').textContent = "Ошибка загрузки";
+        if (p === 1) {
+            alert("Невозможно отправить запрос");
+        }
         return false;
     }
 
