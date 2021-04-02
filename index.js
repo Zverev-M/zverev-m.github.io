@@ -11,38 +11,49 @@ async function addCity() {
         cityList = Array.of(city);
     }
 
-    var result = await createNewFavoriteCity(city);
+    var result = await createNewFavoriteCity(city, 1);
     if (result) {
         localStorage.setItem('cityList', JSON.stringify(cityList));
     }
 }
 
 function deleteCity(el, cityName) {
-    el.remove();
+    el.querySelector('button').disabled = true;
+
     var cityList = JSON.parse(localStorage.getItem("cityList"));
     cityList.splice(cityList.indexOf(cityName.toLowerCase()), 1);
     localStorage.setItem("cityList", JSON.stringify(cityList));
+
+    el.remove();
 }
 
-async function createNewFavoriteCity(city) {
+async function createNewFavoriteCity(city, p) {
     var el = document.createElement('li');
     el.innerHTML = '<div class="other-city">\n' +
-        '                    <h3 class="grid-element-left other-city-name">Moscow</h3>\n' +
-        '                    <span class="other-city-temperature grid-element-center">5&#8451;</span>\n' +
+        '                    <h3 class="grid-element-left other-city-name">...</h3>\n' +
+        '                    <span class="other-city-temperature grid-element-center">...</span>\n' +
         '                    <img class="other-city-icon grid-element-center" src="weather.png">\n' +
         '                    <button class="round grid-element-right delete">X</button>\n' +
         '                    <ul class="other-city-list">\n' +
-        '                        <li class="inner-list"><span class="point">Ветер</span> <span class="value speed">5.0 m/s</span></li>\n' +
-        '                        <li class="inner-list"><span class="point">Осадки</span> <span class="value description">Broken Clouds</span></li>\n' +
-        '                        <li class="inner-list"><span class="point">Давление</span> <span class="value pressure">1000 hpa</span></li>\n' +
-        '                        <li class="inner-list"><span class="point">Влажность</span> <span class="value humidity">50%</span></li>\n' +
-        '                        <li class="inner-list"><span class="point">Координаты</span> <span class="value coords">[0.00, 0.00]</span></li>\n' +
+        '                        <li class="inner-list"><span class="point">Ветер</span> <span class="value speed">...</span></li>\n' +
+        '                        <li class="inner-list"><span class="point">Осадки</span> <span class="value description">...</span></li>\n' +
+        '                        <li class="inner-list"><span class="point">Давление</span> <span class="value pressure">...</span></li>\n' +
+        '                        <li class="inner-list"><span class="point">Влажность</span> <span class="value humidity">...</span></li>\n' +
+        '                        <li class="inner-list"><span class="point">Координаты</span> <span class="value coords">...</span></li>\n' +
         '                    </ul>\n' +
         '                </div>'
 
+    if (p === 1) {
+        el.style.display = 'none';
+    }
+
+    document.querySelector('#fvr').appendChild(el);
+    el = document.querySelector('#fvr').lastElementChild;
+
     var result = await updateAdditionalCity(city, el);
+
     if (result) {
-        document.querySelector('#fvr').appendChild(el);
+        el.style.display = 'grid';
         return true;
     }
 
@@ -53,7 +64,7 @@ async function updateCurrentCity (el, url) {
     var response = await fetch(url);
     var data;
 
-    if (response.ok) {
+    if (response.status === 200) {
         data = await response.json();
 
         el.querySelector('h2').textContent = data.name;
@@ -70,27 +81,33 @@ async function updateCurrentCity (el, url) {
 }
 
 async function updateAdditionalCity (city, el) {
-    var response = await fetch(getURLByName(city));
-    var data;
-    if (response.ok) {
-        data = await response.json();
+    try {
+        var response = await fetch(getURLByName(city));
+        var data;
+        if (response.status === 200) {
+            data = await response.json();
 
-        el.querySelector('h3').textContent = data.name;
-        el.querySelector('span.other-city-temperature').textContent = Math.round(data.main.temp - 273) + "℃";
-        el.querySelector('img').src = "https://openweathermap.org/img/w/" + data.weather[0].icon + ".png";
-        el.querySelector('span.speed').textContent = data.wind.speed + " m/s";
-        el.querySelector('span.description').textContent = data.weather[0].main;
-        el.querySelector('span.pressure').textContent = data.main.pressure + " hpa";
-        el.querySelector('span.humidity').textContent = data.main.humidity + "%";
-        el.querySelector('span.coords').textContent = "[" + (Math.floor(data.coord.lat * 100)/ 100) + ", " + (Math.floor(data.coord.lon * 100) / 100) + "]";
+            el.querySelector('h3').textContent = data.name;
+            el.querySelector('span.other-city-temperature').textContent = Math.round(data.main.temp - 273) + "℃";
+            el.querySelector('img').src = "https://openweathermap.org/img/w/" + data.weather[0].icon + ".png";
+            el.querySelector('span.speed').textContent = data.wind.speed + " m/s";
+            el.querySelector('span.description').textContent = data.weather[0].main;
+            el.querySelector('span.pressure').textContent = data.main.pressure + " hpa";
+            el.querySelector('span.humidity').textContent = data.main.humidity + "%";
+            el.querySelector('span.coords').textContent = "[" + (Math.floor(data.coord.lat * 100)/ 100) + ", " + (Math.floor(data.coord.lon * 100) / 100) + "]";
 
-        el.querySelector('button.delete').addEventListener('click', () => deleteCity(el, data.name));
+            el.querySelector('button.delete').addEventListener('click', () => deleteCity(el, data.name));
 
-        return true;
-    } else {
-        alert('Город не найден');
+            return true;
+        } else {
+            alert('Город не найден');
+            return false;
+        }
+    } catch (e) {
+        el.querySelector('h3').textContent = "Ошибка загрузки";
         return false;
     }
+
 }
 
 function getURLByName (city) {
@@ -120,7 +137,7 @@ function loadCityList () {
     var cityList = localStorage.getItem("cityList");
     if (cityList) {
         for (let city of JSON.parse(cityList)) {
-            createNewFavoriteCity(city);
+            createNewFavoriteCity(city, 0);
         }
     }
 }
