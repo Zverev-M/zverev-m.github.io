@@ -187,4 +187,8 @@
         grid-template-columns: 1fr;
         list-style-type: none;
     }
+
+    #example {
+        display: none;
+    }
 }

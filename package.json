@@ -1,0 +1,10 @@
+{
+  "name": "zverev-m.github.io",
+  "version": "1.0.0",
+  "proxy": "http://localhost:3000",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongodb": "^3.6.5",
+    "node-fetch": "^2.6.1"
+  }
+}

@@ -7,34 +7,36 @@ async function addCity() {
         return;
     }
 
-    let btn = document.querySelector('#add');
-    btn.disabled = true;
     el.value = '';
 
-    var cityList = localStorage.getItem('cityList');
-    if (cityList) {
-        cityList = JSON.parse(cityList);
-        cityList.push(city.toLowerCase());
-    } else {
-        cityList = Array.of(city);
-    }
+    let result = await createNewFavoriteCity(city, 1);
 
-    var result = await createNewFavoriteCity(city, 1);
     if (result) {
-        localStorage.setItem('cityList', JSON.stringify(cityList));
-    }
+        try {
+            await fetch('http://localhost:3000/features?city=' + city, {method: 'POST'})
 
-    btn.disabled = false;
+        } catch (e) {
+            alert("Проблемы с добавлением города");
+        }
+    }
 }
 
-function deleteCity(el, cityName) {
+async function deleteCity(el, cityName) {
     el.querySelector('button').disabled = true;
 
-    var cityList = JSON.parse(localStorage.getItem("cityList"));
-    cityList.splice(cityList.indexOf(cityName.toLowerCase()), 1);
-    localStorage.setItem("cityList", JSON.stringify(cityList));
-
-    el.remove();
+    try {
+        await fetch('http://localhost:3000/features?city=' + cityName.toLowerCase(),
+            {
+                method: 'DELETE'
+            })
+            .then(res => {
+                if (res.status === 200) {
+                    el.remove();
+                }
+            })
+    } catch (err) {
+        el.querySelector('button').disabled = false;
+    }
 }
 
 async function createNewFavoriteCity(city, p) {
@@ -59,7 +61,7 @@ async function updateCurrentCity (el, url) {
         var response = await fetch(url);
         var data;
 
-        if (response.status === 200) {
+        if (response.ok) {
             data = await response.json();
 
             el.querySelector('h2').textContent = data.name;
@@ -70,17 +72,20 @@ async function updateCurrentCity (el, url) {
             el.querySelector('span.pressure').textContent = data.main.pressure + " hpa";
             el.querySelector('span.humidity').textContent = data.main.humidity + "%";
             el.querySelector('span.coords').textContent = "[" + (Math.floor(data.coord.lat * 100)/ 100) + ", " + (Math.floor(data.coord.lon * 100) / 100) + "]";
-
-            return true;
         } else {
-            alert('Ошибка загрузки');
-            return false;
+            el.querySelector('h2').textContent = 'Ошибка загрузки';
         }
-    } catch (e) {
-        alert("Невозможно отправить запрос")
-        return false;
-    }
 
+    } catch (e) {
+        el.querySelector('h2').textContent = 'Ошибка загрузки';
+        el.querySelector('span.current-city-temperature').textContent = "...";
+        el.querySelector('img.current-city-icon').src = "weather.png";
+        el.querySelector('span.speed').textContent = "...";
+        el.querySelector('span.description').textContent = "...";
+        el.querySelector('span.pressure').textContent = "...";
+        el.querySelector('span.humidity').textContent = "...";
+        el.querySelector('span.coords').textContent = "...";
+    }
 }
 
 async function updateAdditionalCity (city, el, p) {
@@ -89,6 +94,7 @@ async function updateAdditionalCity (city, el, p) {
         var data;
         if (response.status === 200) {
             data = await response.json();
+            el.style.display = 'grid';
 
             el.querySelector('h3').textContent = data.name;
             el.querySelector('span.other-city-temperature').textContent = Math.round(data.main.temp - 273) + "℃";
@@ -109,15 +115,14 @@ async function updateAdditionalCity (city, el, p) {
     } catch (e) {
         el.querySelector('h3').textContent = "Ошибка загрузки";
         if (p === 1) {
-            alert("Невозможно отправить запрос");
+            alert("Невозможно добавить город");
         }
         return false;
     }
-
 }
 
 function getURLByName (city) {
-    return `https://api.openweathermap.org/data/2.5/weather?q=${city}&lang=ru&appid=94d4575428dc92002c2aca36ad6f2ca9`;
+    return `http://localhost:3000/weather/city?q=${city}`;
 }
 
 function updateByCoord () {
@@ -128,21 +133,31 @@ function updateByCoord () {
             var lat = position.coords.latitude;
             var lon = position.coords.longitude;
 
-            updateCurrentCity(document.querySelector('div.current-city'), `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&lang=ru&appid=94d4575428dc92002c2aca36ad6f2ca9`);
+            updateCurrentCity(document.querySelector('div.current-city'), `http://localhost:3000/weather/coordinates?lat=${lat}&lon=${lon}`);
         },
 
         function () {
-            updateCurrentCity(document.querySelector('div.current-city'),`https://api.openweathermap.org/data/2.5/weather?q=москва&lang=ru&appid=94d4575428dc92002c2aca36ad6f2ca9`);
+            updateCurrentCity(document.querySelector('div.current-city'),`http://localhost:3000/weather/city?q=москва`);
         }
     );
 
     return result;
 }
 
-function loadCityList () {
-    var cityList = localStorage.getItem("cityList");
+async function getCityList () {
+    let cityList;
+    await fetch('http://localhost:3000/features')
+        .then(response => response.json())
+        .then(data => {
+            cityList = data;
+        })
+    return cityList;
+}
+
+async function loadCityList () {
+    var cityList = await getCityList();
     if (cityList) {
-        for (let city of JSON.parse(cityList)) {
+        for (let city of cityList) {
             createNewFavoriteCity(city, 0);
         }
     }
