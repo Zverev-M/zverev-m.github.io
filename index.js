@@ -96,8 +96,8 @@ async function updateAdditionalCity (city, el, p) {
             data = await response.json();
 
             if (data.cod === "404") {
-                alert('Город не найден');
                 el.style.display = 'none';
+                alert('Город не найден');
                 return false;
             }
 
