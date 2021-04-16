@@ -94,6 +94,13 @@ async function updateAdditionalCity (city, el, p) {
         var data;
         if (response.status === 200) {
             data = await response.json();
+
+            if (data.cod === "404") {
+                alert('Город не найден');
+                el.style.display = 'none';
+                return false;
+            }
+
             el.style.display = 'grid';
 
             el.querySelector('h3').textContent = data.name;
