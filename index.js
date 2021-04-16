@@ -13,7 +13,7 @@ async function addCity() {
 
     if (result) {
         try {
-            await fetch('http://localhost:3000/features?city=' + city, {method: 'POST'})
+            await fetch('http://localhost:3000/favourites?city=' + city, {method: 'POST'})
 
         } catch (e) {
             alert("Проблемы с добавлением города");
@@ -25,7 +25,7 @@ async function deleteCity(el, cityName) {
     el.querySelector('button').disabled = true;
 
     try {
-        await fetch('http://localhost:3000/features?city=' + cityName.toLowerCase(),
+        await fetch('http://localhost:3000/favourites?city=' + cityName.toLowerCase(),
             {
                 method: 'DELETE'
             })
@@ -146,7 +146,7 @@ function updateByCoord () {
 
 async function getCityList () {
     let cityList;
-    await fetch('http://localhost:3000/features')
+    await fetch('http://localhost:3000/favourites')
         .then(response => response.json())
         .then(data => {
             cityList = data;

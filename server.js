@@ -50,7 +50,7 @@ app.get('/weather/coordinates', (request, response) => {
         })
 })
 
-app.get('/features', (request, response) => {
+app.get('/favourites', (request, response) => {
     let ip = parseIp(request);
     if (ip) {
         mongoClient.connect((err, client) => {
@@ -66,7 +66,7 @@ app.get('/features', (request, response) => {
     }
 })
 
-app.post('/features', (request, response) => {
+app.post('/favourites', (request, response) => {
     let ip = parseIp(request);
     let city = request.query['city'];
     if (ip && city) {
@@ -84,7 +84,7 @@ app.post('/features', (request, response) => {
     }
 })
 
-app.delete('/features', (request, response) => {
+app.delete('/favourites', (request, response) => {
     let ip = parseIp(request);
     let city = request.query['city'];
     if (ip && city) {
